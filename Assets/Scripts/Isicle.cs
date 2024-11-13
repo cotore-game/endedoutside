@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ObstacleGenerater : MonoBehaviour
+public class Isicle : MonoBehaviour
 {
     [SerializeField] private float ShootingSpeed = 5f;
 
@@ -26,10 +26,10 @@ public class ObstacleGenerater : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        Debug.Log("うっ、bullet");
         // 攻撃オブジェクトに当たったら消滅
-        if (other.CompareTag("Projectile") || other.CompareTag("Player"))
+        if (other.CompareTag("randoseru") || other.CompareTag("Player"))
         {
-            Destroy(other.gameObject);  // 攻撃オブジェクトを消す
             Destroy(gameObject);  // つららオブジェクトを消す
         }
     }
