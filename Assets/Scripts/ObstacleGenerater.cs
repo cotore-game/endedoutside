@@ -4,18 +4,33 @@ using UnityEngine;
 
 public class ObstacleGenerater : MonoBehaviour
 {
-    [SerializeField] private float ShootingSpeed = 50f;
-    Vector3 direction = Vector3.zero;   
+    [SerializeField] private float ShootingSpeed = 5f;
 
-    private void Update()
+    private Transform playerTransform;
+
+    void Start()
     {
-        // オブジェクトの位置から原点 (0, 0, 0) を引いて方向ベクトルを計算
-        direction = Vector3.zero - transform.position;
+        playerTransform = GameObject.FindWithTag("Player").transform;  // プレイヤーの位置を取得
+        if (playerTransform != null)
+        {
+            Vector2 direction = (playerTransform.position - transform.position).normalized;
+            transform.up = direction;  // つららの向きをプレイヤーに合わせる
+        }
+    }
 
-        // `LookRotation`を使って、初期状態（Rotation 0 0 0）からpi/2方向に調整
-        Quaternion targetRotation = Quaternion.LookRotation(direction) * Quaternion.Euler(0, -90, 0);
+    void Update()
+    {
+        // プレイヤーに向かって移動
+        transform.position += transform.up * ShootingSpeed * Time.deltaTime;
+    }
 
-        // ターゲット方向に回転
-        transform.rotation = targetRotation;
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        // 攻撃オブジェクトに当たったら消滅
+        if (other.CompareTag("Projectile") || other.CompareTag("Player"))
+        {
+            Destroy(other.gameObject);  // 攻撃オブジェクトを消す
+            Destroy(gameObject);  // つららオブジェクトを消す
+        }
     }
 }
